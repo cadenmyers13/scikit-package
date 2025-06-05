@@ -41,15 +41,15 @@
       * - project_keywords
         - A list of keywords included in ``pyproject.toml``.
           e.g., PDF, diffraction, neutron, x-ray
-      * - min_python_version
+      * - minimum_supported_python_version
         - The minimum supported Python version.
           e.g. |PYTHON_MIN_VERSION|
-      * - max_python_version
+      * - maximum_supported_python_version
         - The maximum supported Python version
           e.g. |PYTHON_MAX_VERSION|
-      * - needs_c_code_compiled
+      * - project_needs_c_code_compiled
         - Specifies whether C code compilation is required.
           For pure Python packages, the default value is ``No``.
-      * - has_gui_tests
+      * - project_has_gui_tests
         - Specifies whether GUI tests are included.
           For most packages, the default value is ``No``.
