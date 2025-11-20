@@ -12,7 +12,7 @@ assignees: ""
 - [ ] All the badges on the README are passing.
 - [ ] License information is verified as correct. If you are unsure, please comment below.
 - [ ] Locally rendered documentation contains all appropriate pages, tutorials, and other human-written text is up-to-date with any changes in the code.
-- [ ] All API references are included. To check this, run `conda install scikit-package` and then `package build api-doc`. Review any edits made by rebuilding the docs locally.
+- [ ] All API references are included. To check this, run `conda install scikit-package` and then `package build api-doc`. Review any edits made by rerendering the docs locally.
 - [ ] Installation instructions in the README, documentation, and the website are updated.
 - [ ] Successfully run any tutorial examples or do functional testing with the latest Python version.
 - [ ] Grammar and writing quality are checked (no typos).
