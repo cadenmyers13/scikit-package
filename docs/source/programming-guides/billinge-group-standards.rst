@@ -440,8 +440,10 @@ Update the docstring in the old function to warn users
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now, add a helpful message informing users that the old function is
-deprecated and will be removed in the future. This message can be generated
-in the command line by running,
+deprecated and will be removed in the future. This is an important step
+because it informs users who read the docstring of the function
+about the deprecation. This will show up in the API docs.
+The docstring can be generated in the command line by running,
 
 ::
 
