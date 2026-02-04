@@ -291,7 +291,7 @@ Locate the method or function to be deprecated
 First, you will have to a locate method or function that needs to be
 deprecated. For this example, we will be deprecating the ``loadData()``
 method from ``diffpy.utils.parsers.loaddata``. This will be changed to
-``load_data()`` from ``diffpy.utils.tools``.
+``load_data()`` from ``diffpy.utils.parsers``.
 
 Get necessary imports from ``diffpy.utils``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -342,7 +342,7 @@ for the ``loadData`` example, this looks like,
        "loadData",
        "load_data",
        removal_version,
-       new_base="diffpy.utils.tools",
+       new_base="diffpy.utils.parsers",
    )
 
 Mark as deprecated with ``@deprecated``
@@ -428,7 +428,7 @@ to import the new function from its new location,
 
 ::
 
-   from diffpy.utils.tools import load_data # omit this if your function location hasn't changed
+   from diffpy.utils.parsers import load_data # omit this if your function location hasn't changed
 
    @deprecated(loaddata_deprecation_msg)
    def loadData(inputs)
@@ -440,11 +440,29 @@ Update the docstring in the old function to warn users
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now, add a helpful message informing users that the old function is
-deprecated and will be removed in the future,
+deprecated and will be removed in the future. This message can be generated
+in the command line by running,
 
 ::
 
-   from diffpy.utils.tools import load_data # omit this if your function location hasn't changed
+   python -m diffpy.utils._deprecator NEW_NAME REMOVAL_VERSION -n NEW_BASE
+
+or in this case,
+
+::
+
+   python -m diffpy.utils._deprecator load_data 4.0.0 -n diffpy.utils.parsers
+
+Replace ``NEW_NAME``, ``REMOVAL_VERSION``, and ``NEW_BASE`` with
+your new function name, removal version, and new base name.
+If the function location is not changing, omit the ``-n NEW_BASE``.
+
+This will print out a docstring you can copy and paste into the
+deprecated function like so,
+
+::
+
+   from diffpy.utils.parsers import load_data # omit this if your function location hasn't changed
 
    @deprecated(loaddata_deprecation_msg)
    def loadData(inputs)
@@ -491,7 +509,7 @@ message,
 
        'diffpy.utils.parsers.loaddata.loadData' is deprecated
        and will be removed in version 4.0.0. Please use
-       'diffpy.utils.tools.load_data' instead.
+       'diffpy.utils.parsers.load_data' instead.
 
 Open a Pull Request
 ^^^^^^^^^^^^^^^^^^^
