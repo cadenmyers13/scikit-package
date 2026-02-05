@@ -1,6 +1,6 @@
 **Added:**
 
-* No news added: No news needed: email update
+* No news added: email update
 
 **Changed:**
 
