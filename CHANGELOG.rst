@@ -186,4 +186,4 @@ Release notes
 
 **Fixed:**
 
-* Update corresponding email to sb2896@columbia.edu.
+* Update corresponding email to sbillinge@ucsb.edu.

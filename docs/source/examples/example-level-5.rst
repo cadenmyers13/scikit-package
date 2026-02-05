@@ -16,7 +16,7 @@ We show the responses of **Sir Lancelot** to the ``scikit-package`` prompts belo
 .. code-block:: bash
 
     [1/16] maintainer_name (Simon Billinge): Sir Lancelot
-    [2/16] maintainer_email (sb2896@columbia.edu): sirlancelotbrave@montypy.com
+    [2/16] maintainer_email (sbillinge@ucsb.edu): sirlancelotbrave@montypy.com
     [3/16] maintainer_github_username (sbillinge): sirlancelotbrave
     [4/16] contributors (Sangjoon Lee, Simon Billinge, Billinge Group members):
         Sir Lancelot, Sir Robin, King Arthur

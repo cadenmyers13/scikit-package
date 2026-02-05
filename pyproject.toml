@@ -6,14 +6,14 @@ build-backend = "setuptools.build_meta"
 name = "scikit-package"
 dynamic=['version', 'dependencies']
 authors = [
-  { name="Simon J.L. Billinge", email="sb2896@columbia.edu" },
+  { name="Simon J.L. Billinge", email="sbillinge@ucsb.edu" },
   { name="Sangjoon Lee", email="bobleesj@gmail.com" },
   { name="Andrew Yang", email="ay2546@columbia.edu" },
   { name="Caden Myers", email="cjm2304@columbia.edu" },
   { name="Tieqiong Zhang", email="tz2600@columbia.edu" },
 ]
 maintainers = [
-  { name="Simon J.L. Billinge", email="sb2896@columbia.edu" },
+  { name="Simon J.L. Billinge", email="sbillinge@ucsb.edu" },
   { name="Sangjoon Lee", email="bobleesj@gmail.com" },
 ]
 description = "A Python package standard and generator for scientific code. Use scikit-package to launch a new project or migrate existing ones to support the latest Python versions and streamline the process of distributing and maintaining your software package."
