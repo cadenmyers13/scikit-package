@@ -34,13 +34,13 @@ def test_add_news_item(tmp_path, mocker):
     news_file = _setup_news_test_env(tmp_path, mocker)
     # Mimic `package add --add -m "Add first news."`
     args1 = SimpleNamespace(
-        add=True,
-        change=False,
-        deprecate=False,
-        remove=False,
-        fix=False,
-        security=False,
-        message="Add first news.",
+        add=["Add first news."],
+        change=None,
+        deprecate=None,
+        remove=None,
+        fix=None,
+        security=None,
+        no_news=None,
     )
     news_item(args1)
     expected_content_1 = """**Added:**
@@ -69,15 +69,15 @@ def test_add_news_item(tmp_path, mocker):
 """
     content_1 = news_file.read_text()
     assert content_1.strip() == expected_content_1.strip()
-    # Mimic `package add --add -m "Add second news."`
+    # Mimic `package add news --add "Add second news."`
     args2 = SimpleNamespace(
-        add=True,
-        change=False,
-        deprecate=False,
-        remove=False,
-        fix=False,
-        security=False,
-        message="Add second news.",
+        add=["Add second news."],
+        change=None,
+        deprecate=None,
+        remove=None,
+        fix=None,
+        security=None,
+        no_news=None,
     )
     news_item(args2)
     expected_content_2 = """**Added:**
@@ -114,13 +114,13 @@ def test_no_news_item(tmp_path, mocker):
     news_file = _setup_news_test_env(tmp_path, mocker)
     # Mimic `package add --no-news -m "Fix small typo."`
     args = SimpleNamespace(
-        add=False,
-        change=False,
-        deprecate=False,
-        remove=False,
-        fix=False,
-        security=False,
-        message="Fix small typo.",
+        add=None,
+        change=None,
+        deprecate=None,
+        remove=None,
+        fix=None,
+        security=None,
+        no_news=["Fix small typo."],
     )
     news_item(args)
     expected_content = """**Added:**
