@@ -112,7 +112,7 @@ def test_add_news_item(tmp_path, mocker):
 def test_no_news_item(tmp_path, mocker):
     """Test adding "no news" item to the news file."""
     news_file = _setup_news_test_env(tmp_path, mocker)
-    # Mimic `package add --no-news -m "Fix small typo."`
+    # Mimic `package add --no-news "Fix small typo."`
     args = SimpleNamespace(
         add=None,
         change=None,
