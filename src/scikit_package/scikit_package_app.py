@@ -23,17 +23,46 @@ def _add_subcommands(subparsers, commands, func, special_args={}):
 
 def _add_news_flags(p):
     """Helper function to add flags for `package add news/no-news`."""
-    p.add_argument("-m", "--message", required=True, help="News content.")
-    p.add_argument("-a", "--add", action="store_true", help="Added")
-    p.add_argument("-c", "--change", action="store_true", help="Changed")
-    p.add_argument("-d", "--deprecate", action="store_true", help="Deprecated")
-    p.add_argument("-r", "--remove", action="store_true", help="Removed")
-    p.add_argument("-f", "--fix", action="store_true", help="Fixed")
-    p.add_argument("-s", "--security", action="store_true", help="Security")
-    p.add_argument(
+    group = p.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "-a", "--add", nargs="+", metavar="MESSAGE", help="Added news item."
+    )
+    group.add_argument(
+        "-c",
+        "--change",
+        nargs="+",
+        metavar="MESSAGE",
+        help="Changed news item.",
+    )
+    group.add_argument(
+        "-d",
+        "--deprecate",
+        nargs="+",
+        metavar="MESSAGE",
+        help="Deprecated news item.",
+    )
+    group.add_argument(
+        "-r",
+        "--remove",
+        nargs="+",
+        metavar="MESSAGE",
+        help="Removed news item.",
+    )
+    group.add_argument(
+        "-f", "--fix", nargs="+", metavar="MESSAGE", help="Fixed news item."
+    )
+    group.add_argument(
+        "-s",
+        "--security",
+        nargs="+",
+        metavar="MESSAGE",
+        help="Security news item.",
+    )
+    group.add_argument(
         "-n",
         "--no-news",
-        action="store_true",
+        nargs="+",
+        metavar="MESSAGE",
         help="Inform a brief reason why no news item is needed.",
     )
 
@@ -98,13 +127,12 @@ def setup_subparsers(parser):
         help="Add a news item under the news directory.",
         description=(
             "This command streamlines the process of writing news items.\n\n"
-            "Add -a, -c, -d, -r, -f, or -s to specify the news type.\n"
+            "Add -a, -c, -d, -r, -f, or -s to specify the news type followed "
+            "by your message.\n"
             "If no news is necessary, add -n instead of any of the above.\n"
-            "Then, add `-m <message>` to write the news message.\n\n"
             "Examples:\n"
-            '  package add news --add -m "Add black pre-commit hook."\n'
-            '  package add news -a -m "Support dark mode in UI."\n'
-            '  package add no-news -m "Fix minor typo."'
+            '  package add news -a "Support dark mode in UI."\n'
+            '  package add news -n "Fix minor typo."'
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
