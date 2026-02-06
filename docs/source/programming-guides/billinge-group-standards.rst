@@ -400,7 +400,11 @@ name ``my_function`` instead. This ensures that:
 - Refactoring does not accidentally change behavior
 - Both code paths are validated during the deprecation period
 
-For example, if the original test looks like this:
+Ideally, when you run tests in the following steps, only one
+deprecation warning should be emitted per function that has been deprecated.
+This is to keep the deprecation task organize.
+
+For example, if the original test looks like this,
 
 ::
 
