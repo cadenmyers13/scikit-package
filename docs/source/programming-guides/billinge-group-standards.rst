@@ -277,288 +277,187 @@ Divide an error message into two sections: (1) reason for error, (2) what to do 
 Deprecating functions
 ---------------------
 
-Over time, code bases and standards change and a method or function
-may have a name or location change. In this case, we want to warn
-users that the function or method is being changed and that it will break
-their code in the future. The process of warning users is called **deprecating**.
+As codebases evolve, function and method names are sometimes updated to
+follow improved naming conventions. When this happens, we want to warn
+users that the old name will be removed in a future release while keeping
+their existing code working in the meantime. This process is called
+**deprecation**.
 
-Below is a step-by-step guide for deprecating an old method or class
-using the ``@deprecated`` decorator.
+This guide describes the **simplest and most common case**:
+renaming a function **in place**, without changing its location or API.
 
-Locate the method or function to be deprecated
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example:
 
-First, you will have to a locate method or function that needs to be
-deprecated. For this example, we will be deprecating the ``loadData()``
-method from ``diffpy.utils.parsers.loaddata``. This will be changed to
-``load_data()`` from ``diffpy.utils.parsers``.
+* Old name: ``diffpy.package.MyClass.myFunction``
+* New name: ``diffpy.package.MyClass.my_function``
 
-Get necessary imports from ``diffpy.utils``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Python now includes a built-in decorator for Python versions ``>=3.13``. For
-packages that have support for Python ``<=3.13``, we have to use our own
-deprecator. The syntax is the same for both our deprecator and the
-built-in Python one.
+Import the deprecation utilities
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To get ours and a useful helper function, run
+For Python versions ``< 3.13``, we use DiffPy’s internal deprecation
+decorator. (The syntax matches Python’s built-in decorator in newer
+versions.)
+
+Add the following import near the top of the module,
 
 ::
 
    from diffpy.utils._deprecator import deprecated, build_deprecation_message
 
-.. note::
 
-   If the package dependencies don't include ``diffpy.utils``, add it
-   to ``requirements/pip.txt`` and ``requirements/conda.txt``
+Define the deprecation message
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The function ``build_deprecation_message`` is used to make the deprecation
-methods consistent. We want the message to let the user know what is
-going to be broken in the future, what version it will be broken in, and
-what its new name will be.
+Define a single deprecation message near the top of the file. This message
+should clearly state,
 
-Because these changes are API-breaking (i.e. it will break users' scripts),
-The removal will be made on a version bump of the first number
-(ie. going from version ``3.2.0`` to version ``4.0.0`` or something like that).
+- what is deprecated
+- when it will be removed
+- what to use instead
 
-This function has the inputs
-``base, old_name, new_name, removal_version, new_base=None`` and will
-print
+For this example,
 
 ::
 
-       f"'{base}.{old_name}' is deprecated and will be "
-       "removed in version {removal_version}. Please use"
-       "{new_base}.{new_name} instead."
-
-Use the default ``new_base=None`` if the function location is not changing.
-Otherwise, define your new location through the base name.
-
-Define your deprecation message
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Somewhere near the top of the module, define the deprecation message.
-for the ``loadData`` example, this looks like,
-
-::
-
-   base = "diffpy.utils.parsers.loaddata"
+   base = "diffpy.package.MyClass"
    removal_version = "4.0.0"
-   loaddata_deprecation_msg = build_deprecation_message(
+
+   myFunction_deprecation_msg = build_deprecation_message(
        base,
-       "loadData",
-       "load_data",
+       "myFunction",
+       "my_function",
        removal_version,
-       new_base="diffpy.utils.parsers",
    )
 
-Mark as deprecated with ``@deprecated``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Because the function is not moving, ``new_base`` is omitted.
 
-In the proceeding step, you will begin to change the actual source code
-so pay attention.
 
-Directly above the function you are deprecating, add the ``@deprecated``
-decorator with the deprecation message inside,
+Add the new function
+^^^^^^^^^^^^^^^^^^^^
 
-::
-
-   # In loaddata.py
-
-   @deprecated(loaddata_deprecation_msg)
-   def loadData(inputs)
-      """This is my docstring"""
-      outputs = code_doing_something(inputs)
-      return outputs
-
-Copy old function to its new location and change the name
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Skip to the next step if your function stays in the same file.
-
-Copy and paste your old function to its new location with its new name,
+Create the new function with its updated name. This should be the
+*canonical implementation* going forward.
 
 ::
 
-   # In tools.py (new location)
+   class MyClass:
 
-   def load_data(inputs)
-      """This is my docstring"""
-      outputs = code_doing_something(inputs)
-      return outputs
+       def my_function(self, x):
+           """Perform an important calculation."""
+           return x * 2
 
-::
 
-   # In loaddata.py (old location)
+Mark the old function as deprecated
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   @deprecated(loaddata_deprecation_msg)
-   def loadData(inputs)
-      """This is my docstring"""
-      outputs = code_doing_something(inputs)
-      return outputs
+Keep the old function name, but,
 
-At this point you will have two duplicate functions with different
-names.
+1. Decorate it with ``@deprecated``
+2. Replace its body with a call to the new function
+3. Update its docstring to clearly state the deprecation
 
-Copy old function in the same file and change the name
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If your function is moved to a different file, skip this step but make
-sure you do the previous step.
-
-If the function stays in the same file, simply copy and paste the
-function directly above and change its name to the new name. You will
-now have two functions with different names. If ``loadData()`` stayed in
-the same spot, this would look something like,
+To generate a consistent deprecation docstring, use the helper command,
 
 ::
 
-   # In loaddata.py
+   package add deprecation my_function 4.0.0 -n diffpy.package.MyClass
 
-   def load_data(inputs)
-      """This is my docstring"""
-      outputs = code_doing_something(inputs)
-      return outputs
+This command prints a ready-to-use docstring indicating the removal
+version and the replacement function. Copy and paste the output into the
+deprecated function.
 
-   @deprecated(loaddata_deprecation_msg)
-   def loadData(inputs)
-      """This is my docstring"""
-      outputs = code_doing_something(inputs)
-      return outputs
-
-Point the old function to use the new function
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Now, remove the contents of the old function and have it point to the
-new function. If the new function has changed locations, you will have
-to import the new function from its new location,
+The deprecated method should then look like this,
 
 ::
 
-   from diffpy.utils.parsers import load_data # omit this if your function location hasn't changed
+   class MyClass:
 
-   @deprecated(loaddata_deprecation_msg)
-   def loadData(inputs)
-      """This is my docstring"""
-      outputs = load_data(inputs)
-      return outputs
+       def my_function(self, x):
+           """Perform an important calculation."""
+           return x * 2
 
-Update the docstring in the old function to warn users
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       @deprecated(myFunction_deprecation_msg)
+       def myFunction(self, x):
+           """This function has been deprecated and will be removed in
+           version 4.0.0.
 
-Now, add a helpful message informing users that the old function is
-deprecated and will be removed in the future. This is an important step
-because it informs users who read the docstring of the function
-about the deprecation. This will show up in the API docs.
-The docstring can be generated in the command line by running,
-
-::
-
-   package add deprecation NEW_NAME REMOVAL_VERSION -n NEW_BASE
-
-or in this case,
-
-::
-
-   package add deprecation load_data 4.0.0 -n diffpy.utils.parsers
-
-Replace ``NEW_NAME``, ``REMOVAL_VERSION``, and ``NEW_BASE`` with
-your new function name, removal version, and new base name.
-If the function location is not changing, omit the ``-n NEW_BASE``.
-
-This will print out a docstring you can copy and paste into the
-deprecated function like so,
-
-::
-
-   from diffpy.utils.parsers import load_data # omit this if your function location hasn't changed
-
-   @deprecated(loaddata_deprecation_msg)
-   def loadData(inputs)
-      """This function has been deprecated and will be removed in version
-      4.0.0.
-
-      Please use diffpy.utils.parsers.load_data instead.
-      """
-      outputs = load_data(inputs)
-      return outputs
-
-Duplicate tests so deprecated and new function are tested
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Now, locate the test files where the old function is being tested.
-Copy and paste the test functions that are testing the old function
-and change the name to the new function. This way, both the old and
-new functions are being tested.
-
-If the function location is changing,
-make sure to change the location of the test to the corresponding test file.
-(i.e. if the function is moving from ``loaddata.py`` to ``tools.py``,
-move the test from ``test_loaddata.py`` to ``test_tools.py``).
+           Please use diffpy.package.MyClass.my_function instead.
+           """
+           return self.my_function(x)
 
 
-For example the test file will look something like this,
+Update internal usage
+^^^^^^^^^^^^^^^^^^^^^
+
+Now that both the new and deprecated function names exist, update the
+codebase to use the **new function name everywhere internally**.
+
+Do a global search for the old name ``myFunction`` and replace it with
+``my_function`` in all source files *except* for,
+
+- The deprecated wrapper function itself
+- Test cases that explicitly test the deprecated behavior
+- API documentation where the function is intentionally marked as
+  ``@deprecated``
+
+The goal is to ensure that,
+
+- All internal code paths exercise the new implementation
+- The deprecated function exists only as a thin compatibility layer
+  for external users
+- No new internal code is added that depends on the deprecated name
+
+After this step, the only remaining references to ``myFunction`` should
+be the deprecated method definition, its associated tests, and the api docs
+(this will be handled later).
+
+This ensures that removing the deprecated function in the future will
+not require any additional internal refactoring.
+
+
+Verify the deprecation warning
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install the package locally and run the test suite,
 
 ::
 
-    # In test_loaddata.py
+   pip install .
+   pip install pytest
+   pytest
 
-    def test_loadData():
-         """Test the old function."""
-         # test code for loadData
-
-::
-
-    # In test_tools.py
-
-    def test_load_data():
-         """Test the new function."""
-         # test code for load_data
-
-
-Global search the old function name to make sure its been updated everywhere
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Do a global search and replace the name of the old function everywhere
-you see it *except* in the api docs (api docs will be built later),
-where you have marked it as ``@deprecated``,
-and in the test files where you have duplicated the tests. This will ensure
-that the old function is not being used anywhere else in the code base.
-
-
-Test that the deprecation message prints
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In a fresh environment, locally install your package and ``pytest`` by running
-``pip install .`` and ``pip install pytest``. Then run tests by running,
+If done correctly, pytest should pass and emit a warning when using ``myFunction``.
+The message should look something like,
 
 ::
 
-    pytest
+   'diffpy.package.MyClass.myFunction' is deprecated and will be removed
+   in version 4.0.0. Please use 'diffpy.package.MyClass.my_function' instead.
 
+Update package API docs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If everything works accordingly, all tests will pass with additional
-pytest warnings. The warnings will print the deprecation message you defined.
-In this case, the warning will print something like this,
+Now we can update the API documentation to reflect the deprecation.
+In your terminal run the command,
 
 ::
 
-       'diffpy.utils.parsers.loaddata.loadData' is deprecated
-       and will be removed in version 4.0.0. Please use
-       'diffpy.utils.parsers.load_data' instead.
+   package build api-doc
 
-Open a Pull Request
-^^^^^^^^^^^^^^^^^^^
+This should make the necessary API doc updates.
 
-Once completed and tested, create a PR into the branch of the removal
-version (ie, not ``main`` but something like ``v4.0.0``). If that branch
-does not exist, reach out to the maintainer(s) to have the branch made.
+Removal
+^^^^^^^
 
-Once merged, you are done! The old function will be deprecated and users
-will be warned when they use it. The old function will be removed in the
-future when the removal version is released.
+In the removal release (e.g. ``4.0.0``),
 
+- Delete ``myFunction``
+- Remove the deprecation message
+- Remove the tests for ``myFunction``
+- Keep ``my_function`` as the sole implementation
 
+Congrats, you have successfully deprecated a function!
 
 Other considerations for maintaining group infrastructure
 ---------------------------------------------------------
