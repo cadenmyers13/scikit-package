@@ -446,8 +446,7 @@ The goal is to ensure that,
 - No new internal code is added that depends on the deprecated name
 
 After this step, the only remaining references to ``myFunction`` should
-be the deprecated method definition, its associated tests, and the api docs
-(this will be handled later).
+be the deprecated method definition and its associated tests.
 
 This ensures that removing the deprecated function in the future will
 not require any additional internal refactoring.
@@ -472,18 +471,11 @@ The message should look something like,
    'diffpy.package.MyClass.myFunction' is deprecated and will be removed
    in version 4.0.0. Please use 'diffpy.package.MyClass.my_function' instead.
 
-Update package API docs
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Check the documentation
+^^^^^^^^^^^^^^^^^^^^^^^
 
-Now we can update the API documentation to reflect the deprecation.
-In your terminal run the command,
-
-::
-
-   package build api-doc
-
-This should make the necessary API doc updates. To ensure API docs
-render correctly, build the docs with,
+To check if the documentation is updated with the deprecation message,
+build the documentation locally and open the index page,
 
 ::
     make html docs/ && open docs/build/html/index.html
