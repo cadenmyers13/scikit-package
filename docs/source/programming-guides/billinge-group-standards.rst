@@ -299,13 +299,20 @@ Get necessary imports from ``diffpy.utils``
 Python now includes a built-in decorator for Python versions ``>=3.13``. For
 packages that have support for Python ``<=3.13``, we have to use our own
 deprecator. The syntax is the same for both our deprecator and the
-built-in Python one. To get ours and a useful helper function, run
+built-in Python one.
+
+To get ours and a useful helper function, run
 
 ::
 
-   from diffpy.utils._deprecator import deprecated, deprecation_message
+   from diffpy.utils._deprecator import deprecated, build_deprecation_message
 
-The function ``deprecation_message`` is used to make the deprecation
+.. note::
+
+   If the package dependencies don't include ``diffpy.utils``, add it
+   to ``requirements/pip.txt`` and ``requirements/conda.txt``
+
+The function ``build_deprecation_message`` is used to make the deprecation
 methods consistent. We want the message to let the user know what is
 going to be broken in the future, what version it will be broken in, and
 what its new name will be.
@@ -337,7 +344,7 @@ for the ``loadData`` example, this looks like,
 
    base = "diffpy.utils.parsers.loaddata"
    removal_version = "4.0.0"
-   loaddata_deprecation_msg = deprecation_message(
+   loaddata_deprecation_msg = build_deprecation_message(
        base,
        "loadData",
        "load_data",
@@ -447,13 +454,13 @@ The docstring can be generated in the command line by running,
 
 ::
 
-   python -m diffpy.utils._deprecator NEW_NAME REMOVAL_VERSION -n NEW_BASE
+   package add deprecation NEW_NAME REMOVAL_VERSION -n NEW_BASE
 
 or in this case,
 
 ::
 
-   python -m diffpy.utils._deprecator load_data 4.0.0 -n diffpy.utils.parsers
+   package add deprecation load_data 4.0.0 -n diffpy.utils.parsers
 
 Replace ``NEW_NAME``, ``REMOVAL_VERSION``, and ``NEW_BASE`` with
 your new function name, removal version, and new base name.
@@ -476,36 +483,63 @@ deprecated function like so,
       outputs = load_data(inputs)
       return outputs
 
+Duplicate tests so deprecated and new function are tested
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, locate the test files where the old function is being tested.
+Copy and paste the test functions that are testing the old function
+and change the name to the new function. This way, both the old and
+new functions are being tested.
+
+If the function location is changing,
+make sure to change the location of the test to the corresponding test file.
+(i.e. if the function is moving from ``loaddata.py`` to ``tools.py``,
+move the test from ``test_loaddata.py`` to ``test_tools.py``).
+
+
+For example the test file will look something like this,
+
+::
+
+    # In test_loaddata.py
+
+    def test_loadData():
+         """Test the old function."""
+         # test code for loadData
+
+::
+
+    # In test_tools.py
+
+    def test_load_data():
+         """Test the new function."""
+         # test code for load_data
+
+
 Global search the old function name to make sure its been updated everywhere
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Do a global search and replace the name of the old function everywhere
-you see it, except in the api docs (and where you have marked it as ``@deprecated``).
-We will automatically build api docs later.
+you see it *except* in the api docs (api docs will be built later),
+where you have marked it as ``@deprecated``,
+and in the test files where you have duplicated the tests. This will ensure
+that the old function is not being used anywhere else in the code base.
+
 
 Test that the deprecation message prints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In a fresh environment, locally install your package by running
-``pip install .``. Then, create a new scrap file or notebook and try to
-run some code using the old function name.
-
-If you are unsure how to run some of the functions, please see the
-`example scripts here <https://github.com/diffpy/diffpy.cmi/tree/main/docs/examples>`_.
-It is likely that your function is being used in at least one of these scripts.
-
-If everything works accordingly, a
-deprecation message will be printed. For example,
+In a fresh environment, locally install your package and ``pytest`` by running
+``pip install .`` and ``pip install pytest``. Then run tests by running,
 
 ::
 
-   from diffpy.utils.parsers.loaddata import loadData
+    pytest
 
-   file_path = "path/to/my/data.gr"
-   my_data = loadData(file_path)
 
-The function will still work, but you will now get the following warning
-message,
+If everything works accordingly, all tests will pass with additional
+pytest warnings. The warnings will print the deprecation message you defined.
+In this case, the warning will print something like this,
 
 ::
 
@@ -518,7 +552,12 @@ Open a Pull Request
 
 Once completed and tested, create a PR into the branch of the removal
 version (ie, not ``main`` but something like ``v4.0.0``). If that branch
-does not exist, reach out to Simon to have the branch made.
+does not exist, reach out to the maintainer(s) to have the branch made.
+
+Once merged, you are done! The old function will be deprecated and users
+will be warned when they use it. The old function will be removed in the
+future when the removal version is released.
+
 
 
 Other considerations for maintaining group infrastructure
