@@ -482,7 +482,13 @@ In your terminal run the command,
 
    package build api-doc
 
-This should make the necessary API doc updates.
+This should make the necessary API doc updates. To ensure API docs
+render correctly, build the docs with,
+
+::
+    make html docs/ && open docs/build/html/index.html
+
+Note, this command might vary depending on your project’s documentation setup.
 
 Removal
 ^^^^^^^
