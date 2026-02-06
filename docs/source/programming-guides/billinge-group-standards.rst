@@ -386,6 +386,43 @@ The deprecated method should then look like this,
            """
            return self.my_function(x)
 
+Duplicate tests for the new function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Next, ensure that both the deprecated function and the new function are
+covered by tests.
+
+Locate the existing tests that exercise the old function name
+``myFunction``. Copy these tests and update them to call the new function
+name ``my_function`` instead. This ensures that:
+
+- The new function behaves identically to the old one
+- Refactoring does not accidentally change behavior
+- Both code paths are validated during the deprecation period
+
+For example, if the original test looks like this:
+
+::
+
+   def test_myFunction():
+       obj = MyClass()
+       assert obj.myFunction(2) == 4
+
+Duplicate it for the new function:
+
+::
+
+   def test_my_function():
+       obj = MyClass()
+       assert obj.my_function(2) == 4
+
+At this stage, **both tests should pass** and exercise the same underlying
+logic.
+
+Do not remove the tests for the deprecated function until the removal
+release. These tests act as a safeguard to ensure the deprecated wrapper
+continues to work as expected.
+
 
 Update internal usage
 ^^^^^^^^^^^^^^^^^^^^^
