@@ -482,7 +482,8 @@ To check if the documentation is updated with the deprecation message,
 build the documentation locally and open the index page,
 
 ::
-    make html docs/ && open docs/build/html/index.html
+
+   make html docs/ && open docs/build/html/index.html
 
 Note, this command might vary depending on your project’s documentation setup.
 
