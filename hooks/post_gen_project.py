@@ -10,50 +10,44 @@ from scikit_package.utils.io import copy_all_files
 ROOT = Path.cwd()
 
 
-def get_src_file_location_in_submodule(
-    file_name, package_name="{{ cookiecutter.package_dir_name }}"
+def resolve_namespace_package_name(
+    package_name="{{ cookiecutter.package_dir_name }}",
 ):
-    """Modify filename by replacing the package_dir_name with the module
-    path.
+    """Resolve namespace package from package_dir_name and return list
+    of submodule names.
 
-    Replace package_dir_name in file_name with the corresponding module
-    and submodule path, which is obtained by splitting the
-    package_dir_name using the period.
+    E.g., "my_namespace.my_submodule" -> ["my_namespace",
+    "my_submodule"]
     """
     submodule_names = package_name.split(".")
     submodule_names = [module.strip().lower() for module in submodule_names]
-    file_path_names = file_name.split("/")
-    if file_path_names[1] == package_name:
-        file_path_names = [
-            file_path_names[0],
-            *submodule_names,
-            *file_path_names[2:],
-        ]
-    file_name = "/".join(file_path_names)
-    return file_name
+    return submodule_names
 
 
-def update_package():
+def update_package(
+    github_repo_name="{{ cookiecutter.github_repo_name }}",
+    package_dir_name="{{ cookiecutter.package_dir_name }}",
+):
+    """Copy all files from the old project directory to the new project
+    directory, then remove example files."""
+    # copy files from old project dir
+    old_project_dir = Path().cwd().parents[0]
+    current_project_dir = old_project_dir / github_repo_name
+    copy_all_files(old_project_dir, current_project_dir, exists_ok=True)
+    # remove example files
     example_files_not_in_src = [
-        (
-            "docs/source/api/{{ cookiecutter.package_dir_name }}."
-            "example_package.rst"
-        ),
+        f"docs/source/api/{package_dir_name}.example_package.rst",
         "docs/source/getting-started.rst",
         "tests/test_functions.py",
         "docs/source/img/scikit-package-logo-text.png",
         "docs/source/snippets/example-table.rst",
     ]
     example_files_in_src = [
-        "src/{{ cookiecutter.package_dir_name }}/functions.py",
+        "functions.py",
     ]
-    old_project_dir = Path().cwd().parents[0]
-    current_project_dir = (
-        old_project_dir / "{{ cookiecutter.github_repo_name }}"
-    )
-    copy_all_files(old_project_dir, current_project_dir, exists_ok=True)
+    submodule_names = resolve_namespace_package_name(package_dir_name)
     example_files_in_src = [
-        get_src_file_location_in_submodule(f) for f in example_files_in_src
+        f"src/{'/'.join(submodule_names)}/{f}" for f in example_files_in_src
     ]
     example_files = [*example_files_not_in_src, *example_files_in_src]
     for file in example_files:
