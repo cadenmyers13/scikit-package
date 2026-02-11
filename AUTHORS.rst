@@ -3,6 +3,7 @@ Authors
 
 Sangjoon Lee (sl5400@columbia.edu)
 Caden Myers (cjm2304@columbia.edu)
+Yuchen Xiao (yx2924@columbia.edu)
 Andrew Yang (ay2546@columbia.edu)
 Tieqiong Zhang (tz2600@columbia.edu)
 Simon Billinge (sbillinge@ucsb.edu)
@@ -13,4 +14,4 @@ Contributors
 ------------
 
 For a list of contributors, visit
-https://github.com/Billingegroup/scikit_package/graphs/contributors
+https://github.com/scikit-package/scikit-package/graphs/contributors
