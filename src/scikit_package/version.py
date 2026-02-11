@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# (c) 2024 The Trustees of Columbia University in the City of New York.
-# All rights reserved.
+# Copyright (c) 2024-2025, The Trustees of Columbia University in the City of
+# New York. All rights reserved.
+#
+# Copyright (c) 2026-present, The scikit-package developers. All rights
+# reserved.
 #
 # File coded by: Billinge Group members and community contributors.
 #
@@ -24,5 +27,3 @@ try:
     __version__ = version("scikit-package")
 except PackageNotFoundError:
     __version__ = "unknown"
-
-# End of file

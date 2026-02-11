@@ -152,9 +152,9 @@ Before contributing, please read our `Code of Conduct <https://github.com/scikit
 Contact
 -------
 
-For more information on scikit-package please visit the project `web-page <https://scikit-package.github.io/scikit-package>`_ or email Simon Billinge  at sbillinge@ucsb.edu}}.
+For more information on scikit-package please visit the project `web-page <https://scikit-package.github.io/scikit-package>`_ or email Simon Billinge at sbillinge@ucsb.edu.
 
 Acknowledgements
 ----------------
 
-This GitHub repository is built and maintained with the help of `scikit-package <https://scikit-package.github.io/scikit-package/>`_ as well.
+``scikit-package`` is built and maintained with `scikit-package <https://scikit-package.github.io/scikit-package/>`_.
