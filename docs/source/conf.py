@@ -18,8 +18,8 @@ import time
 from importlib.metadata import version
 from pathlib import Path
 
+# Attempt to import the version dynamically from GitHub tag.
 try:
-
     fullversion = version("scikit_package")
 except Exception:
     fullversion = "No version found. The correct version will appear in the released version."
@@ -31,18 +31,8 @@ except Exception:
 sys.path.insert(0, str(Path("../..").resolve()))
 sys.path.insert(0, str(Path("../../src").resolve()))
 
-# Here provide the default values for the Python version range
-PYTHON_MAX_VERSION = 3.14
-PYTHON_MIN_VERSION = 3.12
-
-# Replace e.g., |PYTHON_MAX_VERSION| with actual value in .rst files
-rst_epilog = f"""
-.. |PYTHON_MAX_VERSION| replace:: {PYTHON_MAX_VERSION}
-.. |PYTHON_MIN_VERSION| replace:: {PYTHON_MIN_VERSION}
-"""
-
 # abbreviations
-ab_authors = "Billinge Group members and community contributors"
+ab_authors = "Sangjoon Lee, Simon Billinge, Billinge Group members"
 
 # -- General configuration ------------------------------------------------
 
@@ -145,11 +135,11 @@ nitpicky = True
 html_theme = "sphinx_rtd_theme"
 
 html_context = {
-    "display_github": True,  # Integrate GitHub
-    "github_user": "scikit-package",  # Username
-    "github_repo": "scikit-package",  # Repo name
-    "github_version": "main",  # Branch
-    "conf_py_path": "/docs/source/",  # Path in repo to the docs folder
+    "display_github": True,
+    "github_user": "scikit-package",
+    "github_repo": "scikit-package",
+    "github_version": "main",
+    "conf_py_path": "/docs/source/",
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
