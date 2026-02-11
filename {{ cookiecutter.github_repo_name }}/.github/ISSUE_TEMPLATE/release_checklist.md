@@ -17,6 +17,7 @@ assignees: ""
 - [ ] Successfully run any tutorial examples or do functional testing with the latest Python version.
 - [ ] Grammar and writing quality are checked (no typos).
 - [ ] Install `pip install build twine`, run `python -m build` and `twine check dist/*` to ensure that the package can be built and is correctly formatted for PyPI release.
+- [ ] Dispatch matrix testing to test the release on all Python versions and systems. If you do not have permission to run this workflow, tag the maintainer and say `@maintainer, please dispatch matrix testing workflow`.
 
 Please tag the maintainer (e.g., @username) in the comment here when you are ready for the PyPI/GitHub release. Include any additional comments necessary, such as version information and details about the pre-release here:
 
