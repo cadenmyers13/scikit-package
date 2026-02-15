@@ -917,7 +917,7 @@ the repository to the ``.cookiecutters/`` directory,
 .. code-block:: bash
 
   rm -rf ~/.cookiecutters/scikit-package
-  git clone . ~/.cookiecutters/scikit-package
+  git clone https://github.com/scikit-package/scikit-package ~/.cookiecutters/scikit-package
 
 Then run ``package create`` or ``package update`` command and
 reply ``n`` to the first prompt asking you to redownload.
