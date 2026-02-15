@@ -4,6 +4,37 @@ Release notes
 
 .. current developments
 
+0.3.0
+=====
+
+**Added:**
+
+* Enable configuring Python versions either in pyproject.toml or GitHub workflow .yml files.
+* Support Python 3.14.
+* Add ``package add deprecation`` to print deprecation docstrings.
+* Add documentation for how to deprecate functions.
+* Added documentation for a local installation with the package update and package create commands.
+* Add package broadcast <issue-url> to broadcast a issue to multiple GitHub repositories.
+* Run package update on scikit-package.
+* Added step in release checklist to run manually dispatch matrix tests.
+* Support setting multiple authors and maintainers.
+
+**Changed:**
+
+* Add `.placeholder` for `img` and `snippets` to replace example files when user run `package update`
+* Changed ``package add news`` by removing ``-m`` flag. User now specifies message directly after specified flag with no ``-m`` necessary.
+
+**Fixed:**
+
+* use ``news`` from the repo in the tests since ``news`` is added in the source list.
+* update m2r dependence to m2r2 everywhere
+* Get the correct scikit-package version
+
+**Removed:**
+
+* Remove Python 3.11.
+
+
 0.2.1
 =====
 
